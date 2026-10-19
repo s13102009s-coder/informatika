@@ -1,0 +1,47 @@
+# Lesson 3-4. Нормализация БД до 3НФ
+
+## Часть 1. Теоретический анализ
+
+### Первичный ключ
+Составной ключ: (student_id, subject_id, exam_date).
+Другие варианты не подходят: student_id повторяется, subject_id повторяется,
+exam_date может совпасть, grade неуникален. Только эта комбинация уникальна
+и минимальна (один студент сдаёт один предмет в одну дату один раз).
+
+### Функциональные зависимости
+student_id -> student_name
+student_id -> group_id
+group_id -> group_name
+teacher_id -> teacher_name
+subject_id -> subject_name
+subject_id -> teacher_id
+(student_id, subject_id, exam_date) -> grade
+
+### Транзитивные зависимости
+student_id -> group_id -> group_name
+subject_id -> teacher_id -> teacher_name
+
+### Нормальная форма исходной таблицы
+1НФ выполнена (все значения атомарны).
+2НФ нарушена: есть частичные зависимости от части составного ключа
+(student_id -> student_name, group_id; subject_id -> subject_name, teacher_id).
+3НФ нарушена из-за транзитивных зависимостей.
+Итог: таблица в 1НФ.
+
+## Часть 2. Нормализация до 3НФ
+
+### Список таблиц
+1. Groups
+2. Students
+3. Teachers
+4. Subjects
+5. StudentGrades
+
+### Связи
+Groups 1-N Students
+Teachers 1-N Subjects
+Students 1-N StudentGrades
+Subjects 1-N StudentGrades
+
+### SQL-создание таблиц
+Смотри файл schema.sql
