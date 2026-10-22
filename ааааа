@@ -1,0 +1,109 @@
+import os
+
+# Имя файла для сохранения
+FILE_NAME = "tasks.txt"
+
+# 1. Функция изменения задачи
+def edited_task(collection):
+    if not collection:
+        print("Список задач пуст.")
+        return
+    
+    try:
+        # Показываем задачи с номерами
+        for i, task in enumerate(collection, 1):
+            print(f"{i}. {task}")
+        
+        index = int(input("Введите номер задачи для изменения: ")) - 1
+        
+        if 0 <= index < len(collection):
+            new_task = input("Введите новое название задачи: ")
+            collection[index] = new_task
+            print("Задача успешно изменена!")
+        else:
+            print("Задачи с таким номером нет.")
+    except ValueError:
+        print("Ошибка: нужно ввести цифру.")
+
+# 2. Функция удаления задачи
+def deleted_task(collection):
+    if not collection:
+        print("Список задач пуст.")
+        return
+    
+    try:
+        for i, task in enumerate(collection, 1):
+            print(f"{i}. {task}")
+            
+        index = int(input("Введите номер задачи для удаления: ")) - 1
+        
+        if 0 <= index < len(collection):
+            removed = collection.pop(index)
+            print(f"Задача '{removed}' удалена.")
+        else:
+            print("Задачи с таким номером нет.")
+    except ValueError:
+        print("Ошибка: нужно ввести цифру.")
+
+# Функция сохранения в файл
+def save_tasks(collection):
+    with open(FILE_NAME, "w", encoding="utf-8") as file:
+        for task in collection:
+            file.write(task + "\n")
+    print("Задачи сохранены в файл.")
+
+# Функция загрузки из файла
+def load_tasks():
+    collection = []
+    if os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "r", encoding="utf-8") as file:
+            for line in file:
+                collection.append(line.strip())
+        print("Задачи успешно загружены из файла.")
+    else:
+        print("Файл с задачами не найден. Начинаем с пустого списка.")
+    return collection
+
+# 3. Главный цикл while в функции main
+def main():
+    # Загружаем задачи при старте
+    collection = load_tasks()
+    
+    while True:
+        print("\n--- Меню ---")
+        print("1. Показать задачи")
+        print("2. Добавить задачу")
+        print("3. Изменить задачу")
+        print("4. Удалить задачу")
+        print("5. Сохранить и выйти")
+        
+        choice = input("Выберите действие: ")
+        
+        # Использование match-case по заданию
+        match choice:
+            case "1":
+                print("\n--- Список задач ---")
+                if not collection:
+                    print("Список пуст.")
+                else:
+                    # 4. Удобное отображение списка (форматирование вывода)
+                    for i, task in enumerate(collection, 1):
+                        print(f"[{i}] {task}")
+            case "2":
+                new_task = input("Введите новую задачу: ")
+                collection.append(new_task)
+                print("Задача добавлена.")
+            case "3":
+                edited_task(collection) # Вызов функции
+            case "4":
+                deleted_task(collection) # Вызов функции
+            case "5":
+                save_tasks(collection)  # Сохранение перед выходом
+                print("Выход из программы. Пока!")
+                break
+            case _:
+                print("Неверный ввод. Попробуйте снова.")
+
+# 5. Вызов функции в конце скрипта
+if __name__ == "__main__":
+    main()
