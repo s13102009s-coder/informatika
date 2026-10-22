@@ -1,0 +1,31 @@
+DELIMITER //
+
+CREATE PROCEDURE ps_shedule_insert(IN num_rows INT)
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE v_lesson_id INT;
+    DECLARE v_group_id INT;
+    DECLARE v_date DATETIME;
+
+    -- Получаем первые доступные ID из таблиц для связей
+    SELECT id INTO v_lesson_id FROM lessons LIMIT 1;
+    SELECT id INTO v_group_id FROM student_group LIMIT 1;
+
+    -- Цикл для автоматического заполнения
+    WHILE i <= num_rows DO
+        -- Условие IF для генерации разных дат (например, чередование дней)
+        IF i % 2 = 0 THEN
+            SET v_date = DATE_ADD(NOW(), INTERVAL i DAY);
+        ELSE
+            SET v_date = DATE_ADD(NOW(), INTERVAL i HOUR);
+        END IF;
+
+        -- Вставка записи
+        INSERT INTO schedules (lesson_id, group_id, schedule_date)
+        VALUES (v_lesson_id, v_group_id, v_date);
+
+        SET i = i + 1;
+    END WHILE;
+END //
+
+DELIMITER ;
