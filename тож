@@ -1,0 +1,14 @@
+import tkinter as tk
+
+root = tk.Tk()
+root.title("Спиральный узор")
+
+n, i, x, y, dx, dy, side = 0, 0, 0, 0, 1, 0, 1
+while n < 25:
+    if n == side ** 2:
+        dx, dy = -dy, dx
+        if dy == 0: side += 1
+    tk.Button(root, text=str(n), width=3, height=1).grid(row=y, column=x)
+    x, y, n = x + dx, y + dy, n + 1
+
+root.mainloop()
