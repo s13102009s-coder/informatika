@@ -1,0 +1,110 @@
+"""
+Task Manager - Консольное приложение для управления задачами.
+
+История изменений (Changelog):
+--------------------------------
+Версия 0.0.1:
+    - Базовый функционал: добавление задач.
+
+Версия 0.0.5:
+    - Добавлен просмотр и удаление задач.
+
+Версия 0.0.9:
+    - Добавлен статус выполнения задачи.
+    - Исправлен баг с пустым вводом (см. BUGFIX.md).
+
+Версия 0.1.0:
+    - Добавлено сохранение данных в файл (JSON).
+    - Проведен рефакторинг кода.
+    - Исправлены все найденные баги.
+"""
+
+import json
+import os
+
+# Имя файла для хранения данных
+DATA_FILE = "tasks.json"
+
+def load_tasks():
+    """Загружает задачи из файла."""
+    if not os.path.exists(DATA_FILE):
+        return []
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return []
+
+def save_tasks(tasks):
+    """Сохраняет задачи в файл."""
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, ensure_ascii=False, indent=4)
+
+def add_task(tasks, title):
+    """Добавляет новую задачу с проверкой на пустую строку (исправление бага)."""
+    if not title.strip():
+        print("Ошибка: Название задачи не может быть пустым!")
+        return
+    
+    task = {
+        "id": len(tasks) + 1,
+        "title": title,
+        "done": False
+    }
+    tasks.append(task)
+    save_tasks(tasks)
+    print(f"Задача '{title}' добавлена.")
+
+def show_tasks(tasks):
+    """Выводит список задач (исправление отображения статуса)."""
+    if not tasks:
+        print("Список задач пуст.")
+        return
+    
+    print("\n--- Ваши задачи ---")
+    for task in tasks:
+        status = "✅" if task.get("done") else "❌"
+        print(f"[{task['id']}] {status} {task['title']}")
+    print("-------------------\n")
+
+def mark_done(tasks, task_id):
+    """Отмечает задачу как выполненную."""
+    for task in tasks:
+        if task["id"] == task_id:
+            task["done"] = True
+            save_tasks(tasks)
+            print("Задача выполнена!")
+            return
+    print("Задача с таким ID не найдена.") # Исправление KeyError
+
+def main():
+    tasks = load_tasks()
+    
+    while True:
+        print("Меню:")
+        print("1. Показать задачи")
+        print("2. Добавить задачу")
+        print("3. Отметить выполненной")
+        print("4. Выход")
+        
+        choice = input("Выберите действие: ")
+        
+        if choice == "1":
+            show_tasks(tasks)
+        elif choice == "2":
+            title = input("Введите название задачи: ")
+            add_task(tasks, title)
+        elif choice == "3":
+            try:
+                task_id = int(input("Введите ID задачи: "))
+                mark_done(tasks, task_id)
+            except ValueError:
+                print("Ошибка: ID должен быть числом.")
+        elif choice == "4":
+            print("До свидания!")
+            break
+        else:
+            print("Неверный ввод.")
+
+if __name__ == "__main__":
+    main()
