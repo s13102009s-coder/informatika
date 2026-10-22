@@ -1,0 +1,8 @@
+mkdir global_prog && \
+chmod 764 global_prog && \
+mkdir global_prog/my_proj && \
+chmod 700 global_prog/my_proj && \
+touch global_prog/my_proj/file1.txt global_prog/my_proj/file2.txt && \
+touch global_prog/file_740.txt global_prog/file_764.txt && \
+chmod 740 global_prog/file_740.txt && \
+chmod 764 global_prog/file_764.txt
