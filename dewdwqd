@@ -1,0 +1,14 @@
+sudo apt update && sudo apt install sqlite3 -y
+sqlite3 students.db <<EOF
+CREATE TABLE students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER,
+    grade TEXT
+);
+INSERT INTO students (name, age, grade) VALUES 
+('Иван Иванов', 20, 'A'),
+('Мария Петрова', 21, 'B'),
+('Алексей Смирнов', 19, 'C');
+SELECT * FROM students;
+EOF
