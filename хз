@@ -1,0 +1,38 @@
+import tkinter as tk
+
+root = tk.Tk()
+root.title("Калькулятор")
+
+text_input = tk.Label(root, text="", anchor="e", bg="white", fg="black", font=("Arial", 20), width=20)
+text_input.grid(row=0, column=0, columnspan=4, pady=10)
+
+expression = ""
+
+def on_click(char):
+    global expression
+    if char == "=":
+        try:
+            result = str(eval(expression))
+            text_input.config(text=result)
+            expression = result
+        except Exception:
+            text_input.config(text="Ошибка")
+            expression = ""
+    elif char == "C":
+        expression = ""
+        text_input.config(text="")
+    else:
+        expression += str(char)
+        text_input.config(text=expression)
+
+for i in range(1, 10):
+    tk.Button(root, text=str(i), command=lambda i=i: on_click(i), width=5, height=2).grid(row=(i-1)//3 + 1, column=(i-1)%3)
+
+for idx, op in enumerate(["+", "-", "*", "/"]):
+    tk.Button(root, text=op, command=lambda op=op: on_click(op), width=5, height=2).grid(row=idx + 1, column=3)
+
+tk.Button(root, text="0", command=lambda: on_click(0), width=5, height=2).grid(row=4, column=1)
+tk.Button(root, text="C", command=lambda: on_click("C"), width=5, height=2).grid(row=4, column=0)
+tk.Button(root, text="=", command=lambda: on_click("="), width=5, height=2).grid(row=4, column=2)
+
+root.mainloop()
