@@ -1,0 +1,7 @@
+mkdir -p priv && chmod 764 priv && cd priv && \
+for ((i=777; i>=0; i--)); do
+    num=$(printf "%03d" $i)
+    touch "$num"
+    chmod "$num" "$num"
+done && \
+cd .. && ls -al priv
