@@ -1,0 +1,13 @@
+sudo apt update && sudo apt upgrade -y
+sudo apt install sqlite3 -y
+mkdir my_project && cd my_project
+sqlite3 database.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT);"
+sqlite3 database.db "INSERT INTO users (name, email) VALUES ('Ivan', 'ivan@example.com'), ('Anna', 'anna@example.com');"
+git init
+echo "database.db" > .gitignore
+git add .
+git commit -m "Initial commit: SQLite homework"
+
+
+
+wsl.exe --install Ubuntu-24.04 скачать
